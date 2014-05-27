@@ -137,7 +137,7 @@ void set_ETX_th(void)
 	{ETX_THERESHOLD = 2 *RPL_DAG_MC_ETX_DIVISOR;}
 	//else if(tx>20 && tx<32)
 	//{ETX_THERESHOLD = 1.5;}
-printf("set ETX_th=%d\n",ETX_THERESHOLD);
+//printf("set ETX_th=%d\n",ETX_THERESHOLD);
 	
 
 }
@@ -196,12 +196,12 @@ dest=rpl_get_parent_ipaddr(p);
 			{
 				ETX_THERESHOLD = pref->link_metric;
 				etx_flag=0;
-				printf("adjust etx-th \n");
+//				printf("adjust etx-th \n");
 				
 			}
 			else if(rpl_pt_parents()==1)
 			{	last_probe_time=clock_seconds();
-				printf("update time\n");	
+//				printf("update time\n");
 				
 				//steps=0;	
 			}
@@ -222,7 +222,7 @@ dest=rpl_get_parent_ipaddr(p);
    
   }
 else
-	{ printf("error ADDR= %02x%02x \n",((uint8_t *)dest)[14], ((uint8_t *)dest)[15]);
+	{ //printf("error ADDR= %02x%02x \n",((uint8_t *)dest)[14], ((uint8_t *)dest)[15]);
 	}
 monitor_parents();
 }

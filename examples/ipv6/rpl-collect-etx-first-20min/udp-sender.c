@@ -276,6 +276,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 
   PROCESS_BEGIN();
 cc2420_set_txpower(23);
+printf("POWER=%d\n",cc2420_get_txpower());
   PROCESS_PAUSE();
 
   set_global_address();

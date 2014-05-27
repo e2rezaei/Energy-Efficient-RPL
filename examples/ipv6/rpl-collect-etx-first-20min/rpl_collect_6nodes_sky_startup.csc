@@ -100,8 +100,8 @@
       <breakpoints />
       <interface_config>
         se.sics.cooja.interfaces.Position
-        <x>200.24873949579845</x>
-        <y>302.929057244525</y>
+        <x>200.0</x>
+        <y>300.0</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
@@ -114,8 +114,8 @@
       <breakpoints />
       <interface_config>
         se.sics.cooja.interfaces.Position
-        <x>98.97478991596643</x>
-        <y>200.3240152277184</y>
+        <x>100.0</x>
+        <y>200.0</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
@@ -128,8 +128,8 @@
       <breakpoints />
       <interface_config>
         se.sics.cooja.interfaces.Position
-        <x>201.02521008403363</x>
-        <y>199.2147715302394</y>
+        <x>200.0</x>
+        <y>200.0</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
@@ -142,8 +142,8 @@
       <breakpoints />
       <interface_config>
         se.sics.cooja.interfaces.Position
-        <x>300.3025210084034</x>
-        <y>199.2147715302394</y>
+        <x>300.0</x>
+        <y>200.0</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
@@ -156,8 +156,8 @@
       <breakpoints />
       <interface_config>
         se.sics.cooja.interfaces.Position
-        <x>399.5798319327731</x>
-        <y>199.2147715302394</y>
+        <x>400.0</x>
+        <y>200.0</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
@@ -170,8 +170,8 @@
       <breakpoints />
       <interface_config>
         se.sics.cooja.interfaces.Position
-        <x>300.7462184873951</x>
-        <y>99.93746060586956</y>
+        <x>400.0</x>
+        <y>100.0</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
@@ -197,13 +197,13 @@
       <skin>se.sics.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>se.sics.cooja.plugins.skins.MoteTypeVisualizerSkin</skin>
       <skin>se.sics.mrm.MRMVisualizerSkin</skin>
-      <viewport>1.5025252525252526 0.0 0.0 1.5025252525252526 44.121212121211926 -115.1585582335666</viewport>
+      <viewport>1.5025252525252526 0.0 0.0 1.5025252525252526 -34.878787878788046 -109.15855823356667</viewport>
     </plugin_config>
-    <width>601</width>
-    <z>0</z>
+    <width>656</width>
+    <z>3</z>
     <height>524</height>
-    <location_x>30</location_x>
-    <location_y>30</location_y>
+    <location_x>23</location_x>
+    <location_y>42</location_y>
   </plugin>
   <plugin>
     se.sics.cooja.plugins.LogListener
@@ -241,44 +241,35 @@
   <plugin>
     se.sics.cooja.plugins.ScriptRunner
     <plugin_config>
-      <script>//GENERATE_MSG(1200000, 'move-1');
+      <script>TIMEOUT(3600000);
 
+GENERATE_MSG(1200000, 'move-1');
 
-
-TIMEOUT(3600000);
-
-
+var node1 = sim.getMoteWithID(1);
+ node1.getInterfaces().getPosition().setCoordinates(200, 300, 0);
+var node2 = sim.getMoteWithID(2);
+ node2.getInterfaces().getPosition().setCoordinates(100, 200, 0);
+var node3 = sim.getMoteWithID(3);
+ node3.getInterfaces().getPosition().setCoordinates(200, 200, 0);
+var node4 = sim.getMoteWithID(4);
+ node4.getInterfaces().getPosition().setCoordinates(300, 200, 0);
+var node5 = sim.getMoteWithID(5);
+ node5.getInterfaces().getPosition().setCoordinates(400, 200, 0);
+var node6 = sim.getMoteWithID(6);
+ node6.getInterfaces().getPosition().setCoordinates(400, 100, 0);   
 
 while(true) {
-
-
 
     YIELD();
 
 if(msg.equals("move-1")) {
 
-
-
-//         log.log('Moving node 4\n');
-
          log.log('Moving node 1\n');
 
 
-
-//         var node4 = sim.getMoteWithID(4);
-
          var node1 = sim.getMoteWithID(1);
-
-         
-
-
-
-//         node4.getInterfaces().getPosition().setCoordinates(300, 500, 0);
-
-
-
+ 
          node1.getInterfaces().getPosition().setCoordinates(0, 100, 0);        
-
 
 
     } 
@@ -289,8 +280,8 @@ if(msg.equals("move-1")) {
       <active>true</active>
     </plugin_config>
     <width>600</width>
-    <z>3</z>
-    <height>700</height>
+    <z>0</z>
+    <height>863</height>
     <location_x>715</location_x>
     <location_y>116</location_y>
   </plugin>
