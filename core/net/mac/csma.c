@@ -109,8 +109,6 @@ LIST(neighbor_list);
 static void packet_sent(void *ptr, int status, int num_transmissions);
 static void transmit_packet_list(void *ptr);
 
-static int pdr=0;
-
 /*---------------------------------------------------------------------------*/
 static struct neighbor_queue *
 neighbor_queue_from_addr(const rimeaddr_t *addr)
@@ -204,8 +202,6 @@ packet_sent(void *ptr, int status, int num_transmissions)
   }
   switch(status) {
   case MAC_TX_OK:
-pdr++;
-printf("pdr=%d\n",pdr);
   case MAC_TX_NOACK:
     n->transmissions++;
     break;
@@ -240,13 +236,13 @@ printf("pdr=%d\n",pdr);
 
         switch(status) {
         case MAC_TX_COLLISION:
-          PRINTF("csma: rexmit collision %d\n", n->transmissions);
+          printf("csma: rexmit collision %d\n", n->transmissions);
           break;
         case MAC_TX_NOACK:
-          PRINTF("csma: rexmit noack %d\n", n->transmissions);
+          printf("csma: rexmit noack %d\n", n->transmissions);
           break;
         default:
-          PRINTF("csma: rexmit err %d, %d\n", status, n->transmissions);
+          printf("csma: rexmit err %d, %d\n", status, n->transmissions);
         }
 
         /* The retransmission time must be proportional to the channel
@@ -268,7 +264,7 @@ printf("pdr=%d\n",pdr);
         time = time + (random_rand() % (backoff_transmissions * time));
 
         if(n->transmissions < metadata->max_transmissions) {
-          PRINTF("csma: retransmitting with time %lu %p\n", time , q);
+          printf("csma: retransmitting with time %lu %p\n", time, q);
           ctimer_set(&n->transmit_timer, time,
                      transmit_packet_list, n);
           /* This is needed to correctly attribute energy that we spent
@@ -338,9 +334,7 @@ send_packet(mac_callback_t sent, void *ptr)
 	  /* Neighbor and packet successfully allocated */
 	  if(packetbuf_attr(PACKETBUF_ATTR_MAX_MAC_TRANSMISSIONS) == 0) {
 	    /* Use default configuration for max transmissions */
-
 	    metadata->max_transmissions = CSMA_MAX_MAC_TRANSMISSIONS;
-
 	  } else {
 	    metadata->max_transmissions =
                   packetbuf_attr(PACKETBUF_ATTR_MAX_MAC_TRANSMISSIONS);
@@ -374,9 +368,8 @@ send_packet(mac_callback_t sent, void *ptr)
     }
     printf("csma: could not allocate packet, dropping packet\n");
   } else {
-	  printf("csma: could not allocate neighbor, dropping packet\n");
+    printf("csma: could not allocate neighbor, dropping packet\n");
   }
-
   mac_call_sent_callback(sent, ptr, MAC_TX_ERR, 1);
 }
 /*---------------------------------------------------------------------------*/
