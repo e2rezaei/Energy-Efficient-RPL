@@ -1367,7 +1367,7 @@ srank = p->dag->rank;
 				{continue;}
 				dest=rpl_get_parent_ipaddr(p);
 				age = (clock_seconds()-(p->update_time))/2000;
-				 printf("prnt rssi=%d,rank=%u\n",p->rssi, p->rank);
+//				 printf("prnt rssi=%d,rank=%u\n",p->rssi, p->rank);
 				if(p->rssi > RSSI_THRESHOLD && (p->rank)<srank)// age<AGE_THRESHOLD &&
 				{	
 				
@@ -1399,7 +1399,7 @@ srank = p->dag->rank;
 	}
 		
 	
-printf("P_T={%02x, %02x, %02x}\n",((uint8_t *)pt_parents[0].ipaddr)[15],((uint8_t *)pt_parents[1].ipaddr)[15],((uint8_t *)pt_parents[2].ipaddr)[15]);
+//printf("P_T={%02x, %02x, %02x}\n",((uint8_t *)pt_parents[0].ipaddr)[15],((uint8_t *)pt_parents[1].ipaddr)[15],((uint8_t *)pt_parents[2].ipaddr)[15]);
 if(pt_parents[0].rank!=INFINITE_RANK)
 {
 	timer = (PROBE_INTERVAL * CLOCK_SECOND);
@@ -1455,7 +1455,7 @@ uip_ipaddr_t *dest;
 dest=(uip_ipaddr_t *)ptr;
 
 probe_output(dest);
-printf("probe %d ADDR=%02x%02x \n",probe_number,((uint8_t *)dest)[14], ((uint8_t *)dest)[15]);
+//printf("probe %d ADDR=%02x%02x \n",probe_number,((uint8_t *)dest)[14], ((uint8_t *)dest)[15]);
 probe_total++;
 
 //printf("probe %d ADDR=%02x%02x \n",probe_number,((uint8_t *)dest)[14], ((uint8_t *)dest)[15]);

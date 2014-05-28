@@ -897,7 +897,7 @@ void probe_output(uip_ipaddr_t *dest)
   buffer[0] = buffer[1] = 0;
 probe_total++;
 //printf("PROBE-MSG num=%d ADDR=%02x%02x \n",probe_total, ((uint8_t *)dest)[14], ((uint8_t *)dest)[15]);
-printf("PROBE num=%d \n",probe_total, ((uint8_t *)dest)[15]);
+//printf("PROBE num=%d \n",probe_total, ((uint8_t *)dest)[15]);
   uip_icmp6_send(dest, ICMP6_RPL, RPL_PROBE, 2);
 
 
