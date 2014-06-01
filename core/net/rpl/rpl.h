@@ -120,6 +120,7 @@ struct rpl_parent {
   int rssi;
   unsigned long update_time;
   char flag;
+  int numtx;
 };
 typedef struct rpl_parent rpl_parent_t;
 /*---------------------------------------------------------------------------*/

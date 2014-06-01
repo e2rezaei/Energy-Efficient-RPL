@@ -84,6 +84,7 @@ static int probe_number=0;
 static int probe_total=0;
 static struct ctimer probe_timer;
 static struct ctimer  stagger_timer;
+static struct ctimer  find_pref_timer;
 static void handle_probe_timer(void *);
 static void handle_stagger_timer(void *);
 static int index;
@@ -1321,24 +1322,29 @@ if (p!=NULL)
 }
 /*---------------------------------------------------------------------------*/
 
-/*struct example_list_struct {
-  struct  example_list_struct *next;
-  int number;
-};
+char find_pref(void)
+{
+	int timer;
+	char pt_exist;
+	pt_exist = rpl_pt_parents();
+	if(pt_exist==1)
+	{
+		timer = (PROBE_INTERVAL * CLOCK_SECOND);
+		ctimer_set(&probe_timer, timer, &handle_probe_timer, pt_parents);
+	}
+	return pt_exist;
+}
 
-LIST(example_list);
-MEMB(example_mem, struct example_list_struct, 3);
+/*---------------------------------------------------------------------------*/
 
-static struct example_list_struct element1, element2,*s1,*s2,*e;*/
 
 char rpl_pt_parents(void)
 {	
-	
+	char pt_exist;
 	rpl_parent_t *p;
 	struct ip_addr_list_struct test;
 	uip_ipaddr_t *dest;
 	unsigned long age;
-	int timer;// jitter;
 rpl_rank_t srank;
 	rpl_parent_t * pref_parent;
 
@@ -1370,7 +1376,7 @@ srank = p->dag->rank;
 //				 printf("prnt rssi=%d,rank=%u\n",p->rssi, p->rank);
 				if(p->rssi > RSSI_THRESHOLD && (p->rank)<srank)// age<AGE_THRESHOLD &&
 				{	
-				
+					p->numtx = 0;
 
 					if(p->rank < pt_parents[0].rank)
 						{	
@@ -1402,19 +1408,15 @@ srank = p->dag->rank;
 //printf("P_T={%02x, %02x, %02x}\n",((uint8_t *)pt_parents[0].ipaddr)[15],((uint8_t *)pt_parents[1].ipaddr)[15],((uint8_t *)pt_parents[2].ipaddr)[15]);
 if(pt_parents[0].rank!=INFINITE_RANK)
 {
-	timer = (PROBE_INTERVAL * CLOCK_SECOND);
-
-	//timer += (random_rand()*CLOCK_SECOND)/RANDOM_RAND_MAX;
-
-	ctimer_set(&probe_timer, timer, &handle_probe_timer, pt_parents);
+	 pt_exist = 1;
 
 }
 else 
 {	
 	//printf("there is no pt_pref_prnt\n");
-	return 0;
+	 pt_exist = 0;
 }
-return 1;
+return  pt_exist;
 	
 }
 /* -------------------------------------------------------------------------------*/
@@ -1447,7 +1449,26 @@ static void handle_probe_timer(void *pt)
 	}
 }
 /*--------------------------------------------------------------------------------*/
+void handle_find_pref_timer(void * ptr)
+{	int i ;
+	uip_ipaddr_t *dest;
+	rpl_parent_t *p;
+	for(i=0; i<3 ; i++)
+	{
+		if(pt_parents[index].rank !=INFINITE_RANK )
+		{
+			dest=pt_parents[index].ipaddr;
+			p=rpl_find_parent(&instance_table[0])->current_dag, dest);
+			printf("new ETX=%d, prr=%d", p->link_metric/128 , (p->numtx/PROBE_NUM_THRESHOLD));
 
+		}
+
+
+	}
+}
+
+
+/*--------------------------------------------------------------------------------*/
 static void handle_stagger_timer(void * ptr)
 {
 int rand_time;
@@ -1477,6 +1498,8 @@ else
 		{	probe_number=0;
 			adjust_ETX_th();
 			printf("\nprobe_total=%d\n",probe_total);
+			ctimer_set(&find_pref_timer, 5*CLOCK_SECOND, &handle_find_pref_timer, NULL);
+
 		}
 	}
 

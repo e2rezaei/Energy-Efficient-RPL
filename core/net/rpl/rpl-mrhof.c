@@ -154,6 +154,7 @@ unsigned int test;
 //elnaz
 unsigned long delta;
 rpl_parent_t * pref;
+p->numtx = p->numtx + numtx;
 //elnaz
   /* Do not penalize the ETX when collisions or transmission errors occur. */
   if(status == MAC_TX_OK || status == MAC_TX_NOACK) {
@@ -199,7 +200,7 @@ dest=rpl_get_parent_ipaddr(p);
 //				printf("adjust etx-th \n");
 				
 			}
-			else if(rpl_pt_parents()==1)
+			else if(find_pref()==1)
 			{	last_probe_time=clock_seconds();
 //				printf("update time\n");
 				

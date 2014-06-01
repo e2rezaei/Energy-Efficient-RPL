@@ -317,6 +317,7 @@ rpl_dag_t *rpl_select_dag(rpl_instance_t *instance,rpl_parent_t *parent);
 void rpl_recalculate_ranks(void);
 //elnaz
 char rpl_pt_parents(void);
+char find_pref(void);
 void monitor_parents(void);
 void adjust_ETX_th(void);
 //elnaz
