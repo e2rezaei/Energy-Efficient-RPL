@@ -1370,7 +1370,7 @@ pref_parent =(&instance_table[0])->current_dag->preferred_parent;
 p = nbr_table_head(rpl_parents);
 srank = p->dag->rank;
 
-free_pt_parent_ptr();
+//free_pt_parent_ptr();
 
   	for( ;p != NULL;p = nbr_table_next(rpl_parents, p)) 
 	{	
@@ -1391,7 +1391,6 @@ free_pt_parent_ptr();
 							pt_parents[2]=test;
 							pt_parents[0].rank=p->rank;
 							pt_parents[0].ipaddr=dest;
-							pt_parents_ptr[0]=p;
 							continue;	
 				
 						}
@@ -1550,16 +1549,16 @@ temp2 = ((p->rank%256)*100)/256;
 }
 /*--------------------------------------------------------------------------------*/
 
-static void free_pt_parent_ptr()
-{	int i;
-	for(i = 0 ; i<3 ; i++)
-	{
-		pt_parents_ptr[i] = NULL;
-
-	}
-	return;
-
-
-}
+//static void free_pt_parent_ptr()
+//{	int i;
+//	for(i = 0 ; i<3 ; i++)
+//	{
+//		pt_parents_ptr[i] = NULL;
+//
+//	}
+//	return;
+//
+//
+//}
 
 #endif /* UIP_CONF_IPV6 */
