@@ -76,6 +76,7 @@ static rpl_of_t * const objective_functions[] = {&RPL_OF};
 #define AGE_THRESHOLD 1049//(2^(RPL_DIO_INTERVAL_MIN ))/hexa //+ RPL_DIO_INTERVAL_DOUBLINGS
 //elnaz
 static struct ip_addr_list_struct pt_parents[3];
+static struct rpl_parent_t* pt_parents_ptr[3];
 static void handle_probe_timer(void *pt);
 //LIST(ip_addr_list);
 //MEMB(pt_prnt_mem, struct ip_addr_list_struct, 3);
@@ -88,6 +89,7 @@ static struct ctimer  find_pref_timer;
 static void handle_probe_timer(void *);
 static void handle_stagger_timer(void *);
 static int index;
+static void free_pt_parent_ptr()
 //static char flag=0;
 //elnaz
 /*---------------------------------------------------------------------------*/
@@ -1367,6 +1369,9 @@ pt_parents[2]=pt_parents[1];
 pref_parent =(&instance_table[0])->current_dag->preferred_parent;
 p = nbr_table_head(rpl_parents);
 srank = p->dag->rank;
+
+free_pt_parent_ptr();
+
   	for( ;p != NULL;p = nbr_table_next(rpl_parents, p)) 
 	{	
 				if(p==pref_parent)
@@ -1377,6 +1382,7 @@ srank = p->dag->rank;
 				if(p->rssi > RSSI_THRESHOLD && (p->rank)<srank)// age<AGE_THRESHOLD &&
 				{	
 					p->numtx = 0;
+					p->recv = 0;
 
 					if(p->rank < pt_parents[0].rank)
 						{	
@@ -1385,6 +1391,7 @@ srank = p->dag->rank;
 							pt_parents[2]=test;
 							pt_parents[0].rank=p->rank;
 							pt_parents[0].ipaddr=dest;
+							pt_parents_ptr[0]=p;
 							continue;	
 				
 						}
@@ -1453,14 +1460,22 @@ void handle_find_pref_timer(void * ptr)
 {	int i ;
 	uip_ipaddr_t *dest;
 	rpl_parent_t *p;
-	printf(" handle_find_pref_timer \n ");
+	 rpl_dag_t *dag;
+	 rpl_dag_t *dag1;
+
 	for(i=0; i<3 ; i++)
 	{
-		if(pt_parents[index].rank !=INFINITE_RANK )
+		if(pt_parents[i].rank !=INFINITE_RANK )
 		{
-			dest=pt_parents[index].ipaddr;
-			p=rpl_find_parent((&instance_table[0])->current_dag, dest);
-			printf("new ETX=%d, prr=%d", p->link_metric/128 , (p->numtx/PROBE_NUM_THRESHOLD));
+			dest=pt_parents[i].ipaddr;
+			dag = (&instance_table[0])->current_dag;
+			if(dag==NULL)
+						{printf(" dag is null in handle_find_pref");}
+
+			p=rpl_find_parent( dag , dest);
+			if(p==NULL)
+			{printf(" p is null in handle_find_pref");}
+			printf("new ETX=%d, numtx=%d, recv=%d\n", p->link_metric , p->numtx, p->recv);
 
 		}
 
@@ -1513,7 +1528,7 @@ void monitor_parents(void)
 	uip_ipaddr_t *dest;
  uint16_t temp1,temp2;
 	rpl_parent_t *pref_parent =(&instance_table[0])->current_dag->preferred_parent;
-	rpl_instance_t *instance=&instance_table[0];
+//	rpl_instance_t *instance=&instance_table[0];
 temp1 = ((((&instance_table[0])->current_dag->rank)%256)*100)/256;
 	printf("rank= %u.%u:{", (((&instance_table[0])->current_dag->rank)/256), temp1);
 	for(p = nbr_table_head(rpl_parents); p != NULL ;     p = nbr_table_next(rpl_parents, p))
@@ -1531,6 +1546,19 @@ temp2 = ((p->rank%256)*100)/256;
 			 RPL_DAG_MC_ETX_DIVISOR);*/
 		}
 	printf("}\n");
+
+}
+/*--------------------------------------------------------------------------------*/
+
+static void free_pt_parent_ptr()
+{	int i;
+	for(i = 0 ; i<3 ; i++)
+	{
+		pt_parents_ptr[i] = NULL;
+
+	}
+	return;
+
 
 }
 

@@ -934,6 +934,9 @@ uip_rpl_input(void)
   case RPL_CODE_DAO_ACK:
     dao_ack_input();
     break;
+//  case RPL_PROBE:
+//    probe_input();
+//    break;
   default:
 //    PRINTF("RPL: received an unknown ICMP6 code (%u)\n", UIP_ICMP_BUF->icode);
     break;

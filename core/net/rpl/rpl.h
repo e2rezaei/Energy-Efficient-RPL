@@ -121,6 +121,7 @@ struct rpl_parent {
   unsigned long update_time;
   char flag;
   int numtx;
+  int recv;
 };
 typedef struct rpl_parent rpl_parent_t;
 /*---------------------------------------------------------------------------*/

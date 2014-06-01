@@ -53,7 +53,7 @@
 static unsigned long last_probe_time=0;
 static char etx_flag=0;
 static char start_flag=1;
-static char steps=0;
+//static char steps=0;
 static char wait=10;
 //elnaz
 
@@ -148,13 +148,15 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
   uint16_t recorded_etx = p->link_metric;
   uint16_t packet_etx = numtx * RPL_DAG_MC_ETX_DIVISOR;
   uint16_t new_etx;
+  uint16_t temp;
 uip_ipaddr_t *dest;
 dest=rpl_get_parent_ipaddr(p);
-unsigned int test;
+
 //elnaz
 unsigned long delta;
 rpl_parent_t * pref;
 p->numtx = p->numtx + numtx;
+p->recv++;
 //elnaz
   /* Do not penalize the ETX when collisions or transmission errors occur. */
   if(status == MAC_TX_OK || status == MAC_TX_NOACK) {
@@ -186,7 +188,9 @@ dest=rpl_get_parent_ipaddr(p);
 //test = PROBE_NUM_THRESHOLD * PROBE_INTERVAL * 2;
 //printf("%lu , test= %d, delta=%d ", (clock_seconds()-last_probe_time),  test, (PROBE_NUM_THRESHOLD * PROBE_INTERVAL * 2) );
   pref = p->dag->preferred_parent;
-  if((p->link_metric)>ETX_THERESHOLD && p==pref)
+  temp = (p->link_metric)/RPL_DAG_MC_ETX_DIVISOR;
+  temp = temp * RPL_DAG_MC_ETX_DIVISOR;
+  if(temp>ETX_THERESHOLD && p==pref)
 	{	printf("pass threshhold ADDR=%02x etx=%u th=%u\n", ((uint8_t *)dest)[15],p->link_metric,ETX_THERESHOLD);
 		delta = (clock_seconds()-last_probe_time);
 		//printf("t=%lu , %lu,%lu, %lu \n",delta, delta*CLOCK_SECOND, 120, 120*CLOCK_SECOND);
