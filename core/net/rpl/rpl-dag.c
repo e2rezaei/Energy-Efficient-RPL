@@ -1405,7 +1405,7 @@ srank = p->dag->rank;
 	}
 		
 	
-//printf("P_T={%02x, %02x, %02x}\n",((uint8_t *)pt_parents[0].ipaddr)[15],((uint8_t *)pt_parents[1].ipaddr)[15],((uint8_t *)pt_parents[2].ipaddr)[15]);
+printf("P_T={%02x, %02x, %02x}\n",((uint8_t *)pt_parents[0].ipaddr)[15],((uint8_t *)pt_parents[1].ipaddr)[15],((uint8_t *)pt_parents[2].ipaddr)[15]);
 if(pt_parents[0].rank!=INFINITE_RANK)
 {
 	 pt_exist = 1;
@@ -1453,12 +1453,13 @@ void handle_find_pref_timer(void * ptr)
 {	int i ;
 	uip_ipaddr_t *dest;
 	rpl_parent_t *p;
+	printf(" handle_find_pref_timer \n ");
 	for(i=0; i<3 ; i++)
 	{
 		if(pt_parents[index].rank !=INFINITE_RANK )
 		{
 			dest=pt_parents[index].ipaddr;
-			p=rpl_find_parent(&instance_table[0])->current_dag, dest);
+			p=rpl_find_parent((&instance_table[0])->current_dag, dest);
 			printf("new ETX=%d, prr=%d", p->link_metric/128 , (p->numtx/PROBE_NUM_THRESHOLD));
 
 		}
@@ -1498,7 +1499,7 @@ else
 		{	probe_number=0;
 			adjust_ETX_th();
 			printf("\nprobe_total=%d\n",probe_total);
-			ctimer_set(&find_pref_timer, 5*CLOCK_SECOND, &handle_find_pref_timer, NULL);
+			ctimer_set(&find_pref_timer, 5*CLOCK_SECOND, &handle_find_pref_timer, 0);
 
 		}
 	}
@@ -1523,7 +1524,7 @@ temp1 = ((((&instance_table[0])->current_dag->rank)%256)*100)/256;
 		printf("%02x ", ((uint8_t *)dest)[15]);
 temp1 = ((p->link_metric%128)*100)/128;
 temp2 = ((p->rank%256)*100)/256;
-		printf("etx=%d.%2d,rank=%u.%2u)", p->link_metric/128, temp1 ,p->rank/256 , temp2);
+		printf("etx=%d.%2d,rank=%u.%2u,rssi=%d)", p->link_metric/128, temp1 ,p->rank/256 , temp2,p->rssi);
 		  /*PRINTF("RPL: My path ETX to the root is %u.%u\n",
 			instance->mc.obj.etx / RPL_DAG_MC_ETX_DIVISOR,
 			(instance->mc.obj.etx % RPL_DAG_MC_ETX_DIVISOR * 100) /
