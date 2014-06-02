@@ -26,7 +26,7 @@
  * This file is part of the Contiki operating system.
  *
  */
-
+#include "dev/cc2420.h"
 #include "contiki.h"
 #include "contiki-lib.h"
 #include "contiki-net.h"

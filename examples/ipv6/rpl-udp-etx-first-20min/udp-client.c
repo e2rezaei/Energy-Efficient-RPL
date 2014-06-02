@@ -149,9 +149,9 @@ set_global_address(void)
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(udp_client_process, ev, data)
 {
-  static struct etimer periodic, temp;
+  static struct etimer periodic;
   static struct ctimer backoff_timer;
- static struct etimer wait;
+//static struct etimer wait;
 //static int tx[] = { 31, 27, 23, 19, 15, 11, 7, 3};
 
 #if WITH_COMPOWER
@@ -160,11 +160,11 @@ PROCESS_THREAD(udp_client_process, ev, data)
 
   PROCESS_BEGIN();
 
-//powertrace_start(CLOCK_SECOND * 1); //elnaz
+powertrace_start(CLOCK_SECOND * 1); //elnaz
 
   cc2420_set_txpower(23);
 
-  printf("probe v\n Tx=%d\n", cc2420_get_txpower());
+  printf("standard RPL\n Tx=%d\n", cc2420_get_txpower());
 
   PROCESS_PAUSE();
 
@@ -190,14 +190,10 @@ PROCESS_THREAD(udp_client_process, ev, data)
 #if WITH_COMPOWER
   powertrace_sniff(POWERTRACE_ON);
 #endif
-  etimer_set(&temp, 60*CLOCK_SECOND);
-  PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
+//  etimer_set(&temp, 60*CLOCK_SECOND);
+//  PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
 
   etimer_set(&periodic, SEND_INTERVAL);
-
-//for(i = 0 ; i<8 ; i++)
-//{
-
 
   while(1)//seq<150)
      {
@@ -214,15 +210,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
         }  //end etimer_expired
 
      }
-  	 //seq = 0;
-     etimer_stop(&periodic);
 
-     etimer_set(&wait, WAIT_INTERVAL);
-
-     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
-  etimer_set(&periodic, SEND_INTERVAL);
-
-//  } // end loop on Tx
 
   PROCESS_END();
 }

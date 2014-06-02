@@ -146,12 +146,24 @@ set_global_address(void)
   uip_ip6addr(&server_ipaddr, 0xaaaa, 0, 0, 0, 0x0250, 0xc2ff, 0xfea8, 0xcd1a); //redbee-econotag
 #endif
 }
+
+static initialize_tx()
+{
+	 static struct etimer wait;
+
+	etimer_set(&wait, WAIT_INTERVAL);
+
+	PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
+
+ printf("Tx is set\n");
+
+}
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(udp_client_process, ev, data)
 {
   static struct etimer periodic, temp;
   static struct ctimer backoff_timer;
- static struct etimer wait;
+
 //static int tx[] = { 31, 27, 23, 19, 15, 11, 7, 3};
 
 #if WITH_COMPOWER
@@ -162,9 +174,9 @@ PROCESS_THREAD(udp_client_process, ev, data)
 
 //powertrace_start(CLOCK_SECOND * 1); //elnaz
 
-  cc2420_set_txpower(31);
-
-  printf("probe v \n Tx=%d\n", cc2420_get_txpower());
+//  cc2420_set_txpower(31);
+//
+//  printf("Tx=%d\n", cc2420_get_txpower());
 
   PROCESS_PAUSE();
 
@@ -190,14 +202,15 @@ PROCESS_THREAD(udp_client_process, ev, data)
 #if WITH_COMPOWER
   powertrace_sniff(POWERTRACE_ON);
 #endif
+
+
+ initialize_tx();
+
+
   etimer_set(&temp, 60*CLOCK_SECOND);
   PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
 
   etimer_set(&periodic, SEND_INTERVAL);
-
-//for(i = 0 ; i<8 ; i++)
-//{
-
 
   while(1)//seq<150)
      {
@@ -214,16 +227,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
         }  //end etimer_expired
 
      }
-  	 //seq = 0;
-     etimer_stop(&periodic);
-
-     etimer_set(&wait, WAIT_INTERVAL);
-
-     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
-  etimer_set(&periodic, SEND_INTERVAL);
-
-//  } // end loop on Tx
-
+	etimer_stop(&periodic);
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
